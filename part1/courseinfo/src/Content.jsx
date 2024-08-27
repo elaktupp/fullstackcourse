@@ -1,12 +1,12 @@
 import React from "react";
 import Part from "./Part";
 
-const Content = ({ p1, p2, p3 }) => {
+const Content = ({ parts }) => {
   return (
     <div>
-      <Part part={p1} />
-      <Part part={p2} />
-      <Part part={p3} />
+      <Part part={parts[0]} />
+      <Part part={parts[1]} />
+      <Part part={parts[2]} />
     </div>
   );
 };
