@@ -32,9 +32,12 @@ export const Button = ({ text, clickHandler }) => {
 
 export const StatisticLine = ({ text, value, unit }) => {
   return (
-    <div>
-      {text}: {value} {unit}
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>
+        {value} {unit}
+      </td>
+    </tr>
   );
 };
 
@@ -56,22 +59,24 @@ export const Statistics = ({ good, neutral, bad }) => {
     else return (good / (good + neutral + bad)) * 100;
   };
 
-  let stats = <Statistics good={good} neutral={neutral} bad={bad} />;
-
   if (totalFeedback() > 0) {
     return (
       <>
         <h1>Statistics</h1>
-        <StatisticLine text="good" value={good} />
-        <StatisticLine text="neutral" value={neutral} />
-        <StatisticLine text="bad" value={bad} />
-        <StatisticLine text="total feedback" value={totalFeedback()} />
-        <StatisticLine text="average score" value={averageScore()} />
-        <StatisticLine
-          text="positives"
-          value={isPositivePercentage()}
-          unit="%"
-        />
+        <table>
+          <tbody>
+            <StatisticLine text="good" value={good} />
+            <StatisticLine text="neutral" value={neutral} />
+            <StatisticLine text="bad" value={bad} />
+            <StatisticLine text="total feedback" value={totalFeedback()} />
+            <StatisticLine text="average score" value={averageScore()} />
+            <StatisticLine
+              text="positives"
+              value={isPositivePercentage()}
+              unit="%"
+            />
+          </tbody>
+        </table>
       </>
     );
   } else {
