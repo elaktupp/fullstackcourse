@@ -9,6 +9,18 @@ function App() {
     return good + neutral + bad;
   };
 
+  // Good = 1, Neutral = 0, Bad = -1
+  const averageScore = () => {
+    let total = good + bad;
+    if (total === 0) total = 1;
+    return (good - bad) / total;
+  };
+
+  const isPositivePercentage = () => {
+    if (good + neutral + bad === 0) return 0;
+    else return (good / (good + neutral + bad)) * 100;
+  };
+
   return (
     <>
       <div>
@@ -18,10 +30,12 @@ function App() {
         <button onClick={() => setBad(bad + 1)}>bad</button>
         <h1>Statistics</h1>
         <ul>
-          <li>good {good}</li>
-          <li>neutral {neutral}</li>
-          <li>bad {bad}</li>
-          <li>total {totalFeedback()}</li>
+          <li>good: {good}</li>
+          <li>neutral: {neutral}</li>
+          <li>bad: {bad}</li>
+          <li>total feedback: {totalFeedback()}</li>
+          <li>average score: {averageScore()}</li>
+          <li>positives {isPositivePercentage()} %</li>
         </ul>
       </div>
     </>
