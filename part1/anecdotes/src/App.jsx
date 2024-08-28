@@ -1,15 +1,6 @@
 import { useState } from "react";
 
 function App() {
-  return (
-    <>
-      <h1>Anecdotes</h1>
-      <AnecdoteGadget />
-    </>
-  );
-}
-
-export const AnecdoteGadget = () => {
   const [index, setIndex] = useState(0);
   const [anecdotes, setAnecdotes] = useState([
     { text: "If it hurts, do it more often.", votes: 0 },
@@ -43,25 +34,60 @@ export const AnecdoteGadget = () => {
     setAnecdotes(copyOfAnecdotes);
   };
 
+  const randomAnecdote = () => {
+    let r = Math.random();
+    let l = anecdotes.length - 1;
+    let i = Math.round(l * r);
+    setIndex(i);
+  };
+
+  const mostPopular = () => {
+    let hasMostVotes = 0;
+    anecdotes.forEach((anecdote, index) => {
+      if (anecdote.votes > anecdotes[hasMostVotes].votes) {
+        hasMostVotes = index;
+      }
+    });
+    return hasMostVotes;
+  };
+
+  return (
+    <>
+      <h1>Anecdotes</h1>
+      <AnecdoteGadget
+        text={anecdotes[index].text}
+        votes={anecdotes[index].votes}
+        getNextAnecdote={randomAnecdote}
+        giveVote={voteAnecdote}
+      />
+      <h1>Anecdote with most votes</h1>
+      <AnecdoteGadget
+        text={anecdotes[mostPopular()].text}
+        votes={anecdotes[mostPopular()].votes}
+      />
+    </>
+  );
+}
+
+export const AnecdoteGadget = ({ text, votes, getNextAnecdote, giveVote }) => {
+  let buttons = "";
+  if (getNextAnecdote != undefined && giveVote != undefined) {
+    buttons = (
+      <>
+        {" "}
+        <button onClick={giveVote}>Vote</button>
+        <button onClick={getNextAnecdote}>Next anecdote</button>
+      </>
+    );
+  }
   return (
     <>
       <hr />
       <p>
-        <i>"{anecdotes[index].text}"</i>
+        <i>"{text}"</i>
       </p>
-      <p>has {anecdotes[index].votes} votes</p>
-      <button onClick={voteAnecdote}>Vote</button>
-      <button
-        onClick={() => {
-          let r = Math.random();
-          let l = anecdotes.length - 1;
-          let i = Math.round(l * r);
-          // console.log(r, l, i, anecdotes[i]);
-          setIndex(i);
-        }}
-      >
-        Next anecdote
-      </button>
+      <p>has {votes} votes</p>
+      {buttons}
       <hr />
     </>
   );
