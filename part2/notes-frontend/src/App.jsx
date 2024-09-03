@@ -13,22 +13,34 @@ const App = (props) => {
     });
   }, []);
 
+  const toggleImportanceOf = (id) => {
+    const url = `http://localhost:3001/notes/${id}`;
+    const note = notes.find((n) => n.id === id);
+    const changedNote = { ...note, important: !note.important };
+
+    axios.put(url, changedNote).then((response) => {
+      setNotes(notes.map((n) => (n.id !== id ? n : response.data)));
+    });
+  };
+
   const handleNoteChange = (event) => {
     console.log(event.target.value);
     setNewNote(event.target.value);
   };
 
   const addNote = (event) => {
-    console.log("NEW NOTE:", newNote);
     event.preventDefault();
     const noteObject = {
-      note: newNote,
+      content: newNote,
       important: Math.random() < 0.5,
-      id: String(notes.length + 1),
+      // id: String(notes.length + 1), <-- OMITTED, LET SERVER SET THIS!
     };
-    console.log("NEW NOTE:", noteObject);
     setNotes(notes.concat(noteObject));
     setNewNote("");
+
+    axios.post("http://localhost:3001/notes", noteObject).then((response) => {
+      console.log(response);
+    });
   };
 
   const notesToShow = showAll
@@ -45,7 +57,11 @@ const App = (props) => {
       </div>
       <ul>
         {notesToShow.map((note) => (
-          <Note key={note.id} note={note} />
+          <Note
+            key={note.content}
+            note={note}
+            toggleImportance={() => toggleImportanceOf(note.id)}
+          />
         ))}
       </ul>
       <form onSubmit={addNote}>
