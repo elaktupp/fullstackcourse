@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import Phonebook from "./services/phonebook";
+import phonebookService from "./services/phonebook";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    Phonebook.getAll().then((data) => setPersons(data));
+    phonebookService.getAllContacts().then((data) => setPersons(data));
   }, []);
 
   const [newName, setNewName] = useState("");
@@ -47,10 +47,20 @@ const App = () => {
       alert(`${newName} is alreayd added to phonebook.`);
     } else {
       const newPerson = { name: newName, number: newNumber };
-      Phonebook.create(newPerson).then((data) => {
+      phonebookService.createContact(newPerson).then((data) => {
         setPersons(persons.concat(data));
         setNewName("");
         setNewNumber("");
+      });
+    }
+  };
+
+  const handleDeleteContact = (index) => {
+    if (
+      window.confirm(`Are you sure you want to delete ${persons[index].name}?`)
+    ) {
+      phonebookService.deleteContact(persons[index].id).then((data) => {
+        phonebookService.getAllContacts().then((data) => setPersons(data));
       });
     }
   };
@@ -68,7 +78,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons contactList={contactList} />
+      <Persons contactList={contactList} deleteContact={handleDeleteContact} />
     </div>
   );
 };
