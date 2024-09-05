@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Note from "./components/Note";
 import axios from "axios";
+import noteService from "./services/notes";
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
@@ -8,8 +9,8 @@ const App = (props) => {
   const [showAll, setShowAll] = useState(true);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/notes").then((response) => {
-      setNotes(response.data);
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes);
     });
   }, []);
 
@@ -18,13 +19,20 @@ const App = (props) => {
     const note = notes.find((n) => n.id === id);
     const changedNote = { ...note, important: !note.important };
 
-    axios.put(url, changedNote).then((response) => {
-      setNotes(notes.map((n) => (n.id !== id ? n : response.data)));
-    });
+    noteService
+      .update(id, changedNote)
+      .then((returnedNote) => {
+        setNotes(notes.map((n) => (n.id !== id ? n : returnedNote)));
+      })
+      .catch((error) => {
+        alert(`the note '${note.content}' was already deleted from server`);
+        setNotes(notes.filter((n) => n.id !== id));
+      });
+    // Using catch instead of providing then with second parameter
+    // i.e. the rejected handler function.
   };
 
   const handleNoteChange = (event) => {
-    console.log(event.target.value);
     setNewNote(event.target.value);
   };
 
@@ -35,11 +43,11 @@ const App = (props) => {
       important: Math.random() < 0.5,
       // id: String(notes.length + 1), <-- OMITTED, LET SERVER SET THIS!
     };
-    setNotes(notes.concat(noteObject));
-    setNewNote("");
-
-    axios.post("http://localhost:3001/notes", noteObject).then((response) => {
-      console.log(response);
+    noteService.create(noteObject).then((returnedNote) => {
+      console.log(returnedNote);
+      setNotes(notes.concat(returnedNote));
+      // This is another way: setNotes([...notes, returnedNote]);
+      setNewNote("");
     });
   };
 
