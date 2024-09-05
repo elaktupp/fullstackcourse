@@ -43,8 +43,26 @@ const App = () => {
   const handleAddContact = (event) => {
     event.preventDefault();
 
-    if (persons.find((p) => p.name === newName)) {
-      alert(`${newName} is alreayd added to phonebook.`);
+    persons.find((p) => console.log(p.name === newName, p));
+
+    let personExists = persons.find((p) => p.name === newName);
+    if (personExists) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook. Do you want to override existing contact?`
+        )
+      ) {
+        const newPersonData = {
+          id: personExists.id,
+          name: newName,
+          number: newNumber,
+        };
+        phonebookService.updateContact(newPersonData).then((_data) => {
+          phonebookService.getAllContacts().then((data) => setPersons(data));
+          setNewName("");
+          setNewNumber("");
+        });
+      }
     } else {
       const newPerson = { name: newName, number: newNumber };
       phonebookService.createContact(newPerson).then((data) => {
