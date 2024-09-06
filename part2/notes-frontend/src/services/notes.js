@@ -10,7 +10,7 @@ const getAll = () => {
   //       return response.data;
   //     });
   // Compact way:
-  // return request.then((response) => response.data);
+  return request.then((response) => response.data);
 
   // TEST CODE with erroneus content to test catch on importance toggle
   /*
