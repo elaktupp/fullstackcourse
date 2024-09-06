@@ -10,7 +10,14 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    phonebookService.getAllContacts().then((data) => setPersons(data));
+    phonebookService
+      .getAllContacts()
+      .then((data) => {
+        setPersons(data);
+      })
+      .catch((error) => {
+        showMessage(`"${error.message}" occured!`, "error", 0);
+      });
   }, []);
 
   const [newName, setNewName] = useState("");
@@ -43,11 +50,13 @@ const App = () => {
     }
   });
 
-  const showMessage = (message, timeout = 3000) => {
-    setMessage(message);
-    setTimeout(() => {
-      setMessage(null);
-    }, timeout);
+  const showMessage = (message, type = "info", timeout = 3000) => {
+    setMessage({ text: message, type: type });
+    if (timeout > 0) {
+      setTimeout(() => {
+        setMessage(null);
+      }, timeout);
+    }
   };
 
   const handleAddContact = (event) => {
@@ -67,21 +76,35 @@ const App = () => {
           name: newName,
           number: newNumber,
         };
-        phonebookService.updateContact(newPersonData).then((data) => {
-          phonebookService.getAllContacts().then((data) => setPersons(data));
-          setNewName("");
-          setNewNumber("");
-          showMessage(`Number of ${data.name} changed to ${data.number}.`);
-        });
+        phonebookService
+          .updateContact(newPersonData)
+          .then((data) => {
+            phonebookService.getAllContacts().then((data) => setPersons(data));
+            setNewName("");
+            setNewNumber("");
+            showMessage(`Number of ${data.name} changed to ${data.number}.`);
+          })
+          .catch((error) => {
+            showMessage(
+              `${newPersonData.name} is already removed from server.`,
+              "error",
+              5000
+            );
+          });
       }
     } else {
       const newPerson = { name: newName, number: newNumber };
-      phonebookService.createContact(newPerson).then((data) => {
-        setPersons(persons.concat(data));
-        setNewName("");
-        setNewNumber("");
-        showMessage(`New contact added ${data.name} ${data.number}.`);
-      });
+      phonebookService
+        .createContact(newPerson)
+        .then((data) => {
+          setPersons(persons.concat(data));
+          setNewName("");
+          setNewNumber("");
+          showMessage(`New contact added ${data.name} ${data.number}.`);
+        })
+        .catch((error) => {
+          showMessage(`"${error.message}" occured!`, "error", 5000);
+        });
     }
   };
 
@@ -89,10 +112,19 @@ const App = () => {
     if (
       window.confirm(`Are you sure you want to remove ${persons[index].name}?`)
     ) {
-      phonebookService.deleteContact(persons[index].id).then((data) => {
-        phonebookService.getAllContacts().then((data) => setPersons(data));
-        showMessage(`Removed ${data.name}.`);
-      });
+      phonebookService
+        .deleteContact(persons[index].id)
+        .then((data) => {
+          phonebookService.getAllContacts().then((data) => setPersons(data));
+          showMessage(`Removed ${data.name}.`);
+        })
+        .catch((error) => {
+          showMessage(
+            `${newPersonData.name} is already removed from server.`,
+            "error",
+            5000
+          );
+        });
     }
   };
 

@@ -4,7 +4,11 @@ const Notification = ({ message }) => {
   if (message === null) {
     return null;
   } else {
-    return <div className="info-message">{message}</div>;
+    if (message.type === "error") {
+      return <div className="error-message">{message.text}</div>;
+    } else {
+      return <div className="info-message">{message.text}</div>;
+    }
   }
 };
 

@@ -7,11 +7,25 @@ h2 {
 }
 
 .info-message {
-  border: 6px solid lightskyblue;
+  border-width: 6px;
+  border-style: double;
+  border-color: lightskyblue;
   border-radius: 9px;
   border-style: double;
   background-color: white;
   color: black;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  border-width: 6px;
+  border-style: solid;
+  border-color: red;
+  border-radius: 9px;
+  background-color: darkred;
+  color: yellow;
+  font-weight: bold;
   padding: 10px;
   margin-bottom: 20px;
 }
