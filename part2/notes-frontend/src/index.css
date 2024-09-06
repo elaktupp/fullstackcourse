@@ -1,0 +1,27 @@
+h1 {
+  display: "flex";
+  padding: 1rem;
+  color: white;
+  background-color: blue;
+}
+
+.note {
+  color: darkslategrey;
+  padding-top: 0.2rem;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.note button {
+  margin-left: 0.5rem;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 1.25rem;
+  border-style: solid;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
