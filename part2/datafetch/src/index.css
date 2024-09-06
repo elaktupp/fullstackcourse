@@ -1,0 +1,40 @@
+.currency-list {
+  background-color: aliceblue;
+  padding: 6px;
+  margin-top: 12px;
+  max-height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.country-list {
+  background-color: antiquewhite;
+  padding: 6px;
+  margin-top: 12px;
+  /*max-height: 300px;*/
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.search-result {
+  background-color: lightblue;
+  padding: 6px;
+  margin-top: 12px;
+}
+
+.country-info {
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  background-color: white;
+  box-shadow: 3px 3px 3px gray;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding: 6px;
+}
+
+.country-info img {
+  width: 160px;
+  padding: 9px;
+  background-color: gray;
+}
