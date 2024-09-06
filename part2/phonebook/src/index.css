@@ -1,0 +1,17 @@
+h1 {
+  color: darkslategray;
+}
+
+h2 {
+  color: slategray;
+}
+
+.info-message {
+  border: 6px solid lightskyblue;
+  border-radius: 9px;
+  border-style: double;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  margin-bottom: 20px;
+}

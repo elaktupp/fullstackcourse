@@ -3,6 +3,8 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import phonebookService from "./services/phonebook";
+import "./index.css";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -14,6 +16,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [message, setMessage] = useState(null);
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -40,6 +43,13 @@ const App = () => {
     }
   });
 
+  const showMessage = (message, timeout = 3000) => {
+    setMessage(message);
+    setTimeout(() => {
+      setMessage(null);
+    }, timeout);
+  };
+
   const handleAddContact = (event) => {
     event.preventDefault();
 
@@ -57,10 +67,11 @@ const App = () => {
           name: newName,
           number: newNumber,
         };
-        phonebookService.updateContact(newPersonData).then((_data) => {
+        phonebookService.updateContact(newPersonData).then((data) => {
           phonebookService.getAllContacts().then((data) => setPersons(data));
           setNewName("");
           setNewNumber("");
+          showMessage(`Number of ${data.name} changed to ${data.number}.`);
         });
       }
     } else {
@@ -69,25 +80,28 @@ const App = () => {
         setPersons(persons.concat(data));
         setNewName("");
         setNewNumber("");
+        showMessage(`New contact added ${data.name} ${data.number}.`);
       });
     }
   };
 
   const handleDeleteContact = (index) => {
     if (
-      window.confirm(`Are you sure you want to delete ${persons[index].name}?`)
+      window.confirm(`Are you sure you want to remove ${persons[index].name}?`)
     ) {
       phonebookService.deleteContact(persons[index].id).then((data) => {
         phonebookService.getAllContacts().then((data) => setPersons(data));
+        showMessage(`Removed ${data.name}.`);
       });
     }
   };
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={message} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
-      <h3>Add new contact</h3>
+      <h2>Add new contact</h2>
       <PersonForm
         handleAddContact={handleAddContact}
         newName={newName}
@@ -95,7 +109,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
       />
-      <h3>Numbers</h3>
+      <h2>Numbers</h2>
       <Persons contactList={contactList} deleteContact={handleDeleteContact} />
     </div>
   );
