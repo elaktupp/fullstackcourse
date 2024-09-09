@@ -71,6 +71,11 @@ const App = () => {
     setSearch(event.target.value);
   };
 
+  // Check and reminder if returning to this code later.
+  if (!import.meta.env.VITE_OPEN_WEATHER_APIKEY) {
+    return <h1>VITE_OPEN_WEATHER_APIKEY environment variable not defined!</h1>;
+  }
+
   return (
     <div>
       <h3>Currency</h3>

@@ -38,3 +38,22 @@
   padding: 9px;
   background-color: gray;
 }
+
+.weather-data {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.weather-data img {
+  background-color: transparent;
+  width: 80px;
+}
+
+.temp-big-text {
+  font-size: 2rem;
+}
+
+.temp-small-text {
+  font-size: 1rem;
+}

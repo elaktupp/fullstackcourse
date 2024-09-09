@@ -1,5 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import CityWeather from "./CityWeather";
 
 const CountryInfo = ({ country }) => {
   if (country === undefined) {
@@ -11,6 +12,15 @@ const CountryInfo = ({ country }) => {
   // Parsing language names from JSON object
   const tempMap = new Map(Object.entries(info.languages));
   const languages = [...tempMap.values()];
+
+  const getPopulationText = (population) => {
+    // 12405999 / 10000
+    // 1240,5999 ~ round
+    // 1241 / 100
+    let millions = Math.round(population / 10000);
+    millions = millions / 100.0;
+    return `${millions} million (${population})`;
+  };
 
   return (
     <div className="country-info">
@@ -24,7 +34,7 @@ const CountryInfo = ({ country }) => {
       </ul>
       <p>
         <b>Population: </b>
-        {info.population}
+        {getPopulationText(info.population)}
       </p>
       <p>
         <b>Land area: </b>
@@ -40,6 +50,8 @@ const CountryInfo = ({ country }) => {
       <img src={info.flags.png} alt="flag" />
       <h4>Coat of Arms of {info.name.common}</h4>
       <img src={info.coatOfArms.svg} alt="coat of arms" />
+
+      <CityWeather city={info.capital[0]} />
     </div>
   );
 };
