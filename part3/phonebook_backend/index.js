@@ -77,8 +77,10 @@ app.delete("/api/persons/:id", (req, resp) => {
 app.post("/api/persons", (req, resp) => {
   const body = req.body;
 
-  if (!body.name || !body.number) {
-    return resp.status(400).json({ error: "incomplete data" });
+  let errors = checkNewContactForErrors(body.name, body.number);
+
+  if (errors.length > 0) {
+    return resp.status(400).json({ error: `${errors.join(",")}` });
   }
 
   const newContact = {
@@ -97,6 +99,24 @@ const generateId = () => {
   const min = 1;
   const max = Number.MAX_SAFE_INTEGER;
   return Math.floor(Math.random() * (max - min) + min);
+};
+
+const checkNewContactForErrors = (name, number) => {
+  let errors = [];
+
+  if (!name) {
+    errors.push("name is missing");
+  }
+
+  if (!number) {
+    errors.push("number is missing");
+  }
+
+  if (contacts.find((c) => c.name === name)) {
+    errors.push("name already exists");
+  }
+
+  return errors;
 };
 
 const PORT = 3001;

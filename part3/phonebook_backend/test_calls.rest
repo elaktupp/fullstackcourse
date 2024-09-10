@@ -21,3 +21,21 @@ Content-Type: application/json
     "name": "Linus Torvalds",
     "number": "555-01001100-01010100"
 }
+
+### Create a new contact with MISSING data
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "",
+    "number": ""
+}
+
+### Create a new contact with EXISTING name
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": ""
+}
