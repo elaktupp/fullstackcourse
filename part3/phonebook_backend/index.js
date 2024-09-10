@@ -25,9 +25,27 @@ let contacts = [
 
 // CODE
 
+// Http request logger
+const morgan = require("morgan");
+
+// Custom token for contact logging
+morgan.token("contact", (req, resp) => {
+  let payload = "(no payload)";
+  if (Object.keys(req.body).length > 0) {
+    payload = JSON.stringify(req.body);
+  }
+  return payload;
+});
+
 const express = require("express");
 const app = express();
 app.use(express.json()); // for easier json data access
+
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :contact"
+  )
+);
 
 // ROOT PAGE
 
@@ -61,7 +79,6 @@ app.get("/api/persons/:id", (req, resp) => {
     // id not found
     resp.status(404).end();
   }
-  resp.json(contacts);
 });
 
 // DELETE BY ID
