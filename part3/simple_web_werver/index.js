@@ -39,6 +39,9 @@ app.use(express.json());
 // of middleware.
 app.use(requestLogger);
 
+const cors = require("cors");
+app.use(cors());
+
 //
 // DATA
 //
