@@ -29,9 +29,13 @@ const express = require("express");
 const app = express();
 app.use(express.json()); // for easier json data access
 
+// ROOT PAGE
+
 app.get("/", (req, resp) => {
   resp.send("<h1>Phonebook Backend</h1>");
 });
+
+// INFO PAGE
 
 app.get("/info", (req, resp) => {
   let info = `<p>Phonebook has info for ${contacts.length} people</p>`;
@@ -39,9 +43,13 @@ app.get("/info", (req, resp) => {
   resp.send(info);
 });
 
+// ALL CONTACTS
+
 app.get("/api/persons", (req, resp) => {
   resp.json(contacts);
 });
+
+// CONTACT BY ID
 
 app.get("/api/persons/:id", (req, resp) => {
   const id = req.params.id;
@@ -54,6 +62,14 @@ app.get("/api/persons/:id", (req, resp) => {
     resp.status(404).end();
   }
   resp.json(contacts);
+});
+
+// DELETE BY ID
+
+app.delete("/api/persons/:id", (req, resp) => {
+  const id = req.params.id;
+  contacts = contacts.filter((c) => c.id !== id);
+  resp.status(204).end();
 });
 
 const PORT = 3001;
