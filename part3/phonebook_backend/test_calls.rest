@@ -10,5 +10,14 @@ GET http://localhost:3001/api/persons
 ### Contact by id
 GET http://localhost:3001/api/persons/1
 
-### Delete contact by id
+### Delete a contact by id
 DELETE http://localhost:3001/api/persons/2
+
+### Create a new contact
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Linus Torvalds",
+    "number": "555-01001100-01010100"
+}

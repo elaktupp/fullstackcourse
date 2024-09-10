@@ -72,6 +72,33 @@ app.delete("/api/persons/:id", (req, resp) => {
   resp.status(204).end();
 });
 
+// CREATE NEW CONTACT
+
+app.post("/api/persons", (req, resp) => {
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return resp.status(400).json({ error: "incomplete data" });
+  }
+
+  const newContact = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  };
+
+  contacts = contacts.concat(newContact);
+
+  resp.json(newContact);
+});
+
+const generateId = () => {
+  // Random integer from min (included) to max (excluded)
+  const min = 1;
+  const max = Number.MAX_SAFE_INTEGER;
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Phonebook Server running on port ${PORT}`);
