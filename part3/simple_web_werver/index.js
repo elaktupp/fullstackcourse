@@ -1,9 +1,47 @@
+// MIDDLEWARE
+const requestLogger = (req, resp, next) => {
+  console.log("Method:", req.method);
+  console.log("Path  :", req.path);
+  console.log("Body  :", req.body);
+  console.log("- - - - - - - - - -");
+  next();
+};
+
+const unknownEndpoint = (req, resp) => {
+  resp.status(404).send({ error: "unknown endpoint" });
+};
+
+//
+// HELPER FUNCTIONS
+//
+const generateId = () => {
+  const maxId =
+    notes.length > 0 ? Math.max(...notes.map((n) => Number(n.id))) : 0;
+
+  // ...notes.map((n) => Number(n.id)) produces array of ids, e.g. [1,2,3]
+  // But array cannot be use as a parameter to Math.max.
+  // Array is transformed into individual number by using "..." spread syntax.
+
+  return String(maxId + 1);
+};
+
+//
+// CODE
+//
 const express = require("express");
 const app = express();
 
 // Express json for easier data access.
 app.use(express.json());
+// Note that logger must be after json parser,
+// otherwise body would be empty. Order of
+// appearance in code is also execution order
+// of middleware.
+app.use(requestLogger);
 
+//
+// DATA
+//
 let notes = [
   { id: "1", content: "HTML is easy", important: true },
   { id: "2", content: "Browser can execute only JavaScript", important: false },
@@ -86,18 +124,12 @@ app.post("/api/notes", (request, response) => {
   response.json(note);
 });
 
-const generateId = () => {
-  console.log("GNERATE:", notes);
-  const maxId =
-    notes.length > 0 ? Math.max(...notes.map((n) => Number(n.id))) : 0;
+// Non-existing route, set AFTER ROUTES!
+app.use(unknownEndpoint);
 
-  // ...notes.map((n) => Number(n.id)) produces array of ids, e.g. [1,2,3]
-  // But array cannot be use as a parameter to Math.max.
-  // Array is transformed into individual number by using "..." spread syntax.
-
-  return String(maxId + 1);
-};
-
+//
+// START LISTENING
+//
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
