@@ -33,8 +33,14 @@ app.get("/", (req, resp) => {
   resp.send("<h1>Phonebook Backend</h1>");
 });
 
+app.get("/info", (req, resp) => {
+  let info = `<p>Phonebook has info for ${contacts.length} people</p>`;
+  info += `<p>${new Date()}</p>`;
+  resp.send(info);
+});
+
 app.get("/api/persons", (req, resp) => {
-  resp.send(contacts);
+  resp.json(contacts);
 });
 
 const PORT = 3001;
