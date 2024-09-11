@@ -3,27 +3,7 @@ import Note from "./components/Note";
 import noteService from "./services/notes";
 import "./index.css";
 import Notification from "./components/Notification";
-
-// Footer component with Inline CSS
-const Footer = () => {
-  const footerStyle = {
-    display: "flex",
-    color: "white",
-    backgroundColor: "blue",
-    fontStyle: "italic",
-    fontSize: 16,
-    marginTop: "0.5rem",
-    padding: "1.0rem",
-  };
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>
-        Note app, Department of Computer Science, University of Helsinki 2024
-      </em>
-    </div>
-  );
-};
+import Footer from "./components/Footer";
 
 const App = (props) => {
   const [notes, setNotes] = useState([]);
