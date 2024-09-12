@@ -50,6 +50,8 @@ app.use(
 const cors = require("cors");
 app.use(cors());
 
+app.use(express.static("dist"));
+
 // ROOT PAGE
 
 app.get("/", (req, resp) => {
