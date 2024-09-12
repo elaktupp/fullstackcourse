@@ -1,6 +1,6 @@
 import axios from "axios";
 import { act } from "react";
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl = "http://localhost:3001/api/persons";
 
 const getAllContacts = () => {
   const request = axios.get(baseUrl);
