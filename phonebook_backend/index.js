@@ -47,6 +47,9 @@ app.use(
   )
 );
 
+const cors = require("cors");
+app.use(cors());
+
 // ROOT PAGE
 
 app.get("/", (req, resp) => {
