@@ -1,5 +1,5 @@
 {
-  "name": "simple_web_werver",
+  "name": "simple_web_server",
   "version": "1.0.0",
   "description": "Backend studies",
   "main": "index.js",
