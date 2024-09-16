@@ -25,6 +25,9 @@ let contacts = [
 
 // CODE
 
+// Environment variables
+require("dotenv").config(); // do this before database models
+
 // Http request logger
 const morgan = require("morgan");
 
@@ -52,6 +55,9 @@ app.use(cors());
 
 app.use(express.static("dist"));
 
+// DATABASE, MODEL
+const Contact = require("./models/contact");
+
 // ROOT PAGE
 
 app.get("/", (req, resp) => {
@@ -69,7 +75,9 @@ app.get("/info", (req, resp) => {
 // ALL CONTACTS
 
 app.get("/api/persons", (req, resp) => {
-  resp.json(contacts);
+  Contact.find({}).then((contacts) => {
+    response.json(contacts);
+  });
 });
 
 // CONTACT BY ID

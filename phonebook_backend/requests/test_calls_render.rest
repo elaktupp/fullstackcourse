@@ -1,0 +1,41 @@
+### Root page
+GET https://full-stack-course-phonebook.onrender.com
+
+### Info page
+GET https://full-stack-course-phonebook.onrender.com/info
+
+### All contacts
+GET https://full-stack-course-phonebook.onrender.com/api/persons
+
+### Contact by id
+GET https://full-stack-course-phonebook.onrender.com/api/persons/1
+
+### Delete a contact by id
+DELETE https://full-stack-course-phonebook.onrender.com/api/persons/2
+
+### Create a new contact
+POST https://full-stack-course-phonebook.onrender.com/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Linus Torvalds",
+    "number": "555-01001100-01010100"
+}
+
+### Create a new contact with MISSING data
+POST https://full-stack-course-phonebook.onrender.com/api/persons/
+Content-Type: application/json
+
+{
+    "name": "",
+    "number": ""
+}
+
+### Create a new contact with EXISTING name
+POST https://full-stack-course-phonebook.onrender.com/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": ""
+}
