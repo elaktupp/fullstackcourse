@@ -11,3 +11,6 @@ DELETE https://full-stack-course-simple-web-server.onrender.com/api/notes/4
 
 ### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response.
 GET https://full-stack-course-simple-web-server.onrender.com/api/notes/bad000bad000bad000bad000
+
+### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response.
+GET https://full-stack-course-simple-web-server.onrender.com/api/notes/thisisbad
