@@ -1,4 +1,6 @@
+//
 // MIDDLEWARE
+//
 const requestLogger = (req, resp, next) => {
   console.log("Method:", req.method);
   console.log("Path  :", req.path);
@@ -28,6 +30,8 @@ const generateId = () => {
 //
 // CODE
 //
+require("dotenv").config(); // do this before database models
+
 const express = require("express");
 const app = express();
 
@@ -43,6 +47,11 @@ const cors = require("cors");
 app.use(cors());
 
 app.use(express.static("dist"));
+
+//
+// DATABASE, MODELS
+//
+const Note = require("./models/note");
 
 //
 // DATA
@@ -68,33 +77,18 @@ app.get("/", (request, response) => {
 // API / GET ALL NOTES
 //
 app.get("/api/notes", (request, response) => {
-  response.json(notes);
+  Note.find({}).then((notes) => {
+    response.json(notes);
+  });
 });
 
 //
 // API / GET NOTE BY ID
 //
 app.get("/api/notes/:id", (request, response) => {
-  const id = request.params.id;
-  const note = notes.find((note) => note.id === id);
-  // Did we found matching note?
-  if (note) {
+  Note.findById(request.params.id).then((note) => {
     response.json(note);
-  } else {
-    // NOTE: Can set custom message text, but usually
-    // not done, it is UI's job to decide how to
-    // present 404 to the user.
-    // response.statusMessage = "No matching note found.";
-    // 404 = not found
-    response.status(404).end();
-  }
-  // NOTE: Without setting 404 reponse here the response
-  // would be 200 (OK) because the request itself is successful
-  // even if we do not find any note. However, that is not
-  // what requester (most likely) expects or at least it is
-  // more convenient to get immediately 404, so there is no
-  // need to analyze the response futher to know it there
-  // is a note or not.
+  });
 });
 
 //
@@ -114,19 +108,18 @@ app.post("/api/notes", (request, response) => {
   // NOTE: Without the json-parser request.body would be undefined.
   const body = request.body;
 
-  if (!body.content) {
+  if (body.content === undefined) {
     return response.status(400).json({ error: "content missing" });
   }
 
   const note = {
     content: body.content,
     important: Boolean(body.important) || false,
-    id: generateId(),
   };
 
-  notes = notes.concat(note);
-
-  response.json(note);
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 // Non-existing route, set AFTER ROUTES!
