@@ -118,8 +118,8 @@ app.post("/api/persons", (req, resp) => {
     number: body.number,
   };
 
-  newContact.save().then((savedNote) => {
-    response.json(savedNote);
+  newContact.save().then((savedContact) => {
+    resp.json(savedContact);
   });
 });
 
