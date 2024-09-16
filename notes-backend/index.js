@@ -13,6 +13,14 @@ const unknownEndpoint = (req, resp) => {
   resp.status(404).send({ error: "unknown endpoint" });
 };
 
+const errorHandler = (error, req, resp, next) => {
+  console.log(error);
+  if (error.name === "CastError") {
+    response.status(400).send({ error: "malformed id:" });
+  }
+  next(error);
+};
+
 //
 // HELPER FUNCTIONS
 //
@@ -35,7 +43,7 @@ require("dotenv").config(); // do this before database models
 const express = require("express");
 const app = express();
 
-// Express json for easier data access.
+// Express json for easier data access, (among) very first to be loaded.
 app.use(express.json());
 // Note that logger must be after json parser,
 // otherwise body would be empty. Order of
@@ -85,7 +93,7 @@ app.get("/api/notes", (request, response) => {
 //
 // API / GET NOTE BY ID
 //
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
   Note.findById(request.params.id)
     .then((note) => {
       if (note) {
@@ -94,10 +102,7 @@ app.get("/api/notes/:id", (request, response) => {
         response.status(404).end();
       }
     })
-    .catch((error) => {
-      console.log(error);
-      response.status(400).send({ error: "malformed id:" });
-    });
+    .catch((error) => next(error)); // moving error handling into middleware
 });
 
 //
@@ -133,6 +138,15 @@ app.post("/api/notes", (request, response) => {
 
 // Non-existing route, set AFTER ROUTES!
 app.use(unknownEndpoint);
+
+// Error handler has to be last loaded middleware and also after routes!
+app.use(errorHandler);
+
+// *** NOTE ***
+// The execution order of middleware is the same as the order that they are loaded
+// into Express with the app.use function.
+// For this reason, it is important to be careful when defining middleware.
+//
 
 //
 // START LISTENING
