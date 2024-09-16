@@ -76,7 +76,7 @@ app.get("/info", (req, resp) => {
 
 app.get("/api/persons", (req, resp) => {
   Contact.find({}).then((contacts) => {
-    response.json(contacts);
+    resp.json(contacts);
   });
 });
 

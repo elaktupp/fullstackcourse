@@ -11,7 +11,7 @@ const password = process.argv[2];
 const name = process.argv.length > 3 ? process.argv[3] : null;
 const number = process.argv.length > 4 ? process.argv[4] : null;
 
-const url = `mongodb+srv://kijutu:${password}@cluster0.kpqrp.mongodb.net/phonebookApp?retryWrites=true&w=majority`;
+const url = `mongodb+srv://kijutu:${password}@cluster0.kpqrp.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`;
 
 mongoose.set("strictQuery", false);
 
