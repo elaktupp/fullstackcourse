@@ -113,10 +113,10 @@ app.post("/api/persons", (req, resp) => {
     return resp.status(400).json({ error: `${errors.join(",")}` });
   }
 
-  const newContact = {
+  const newContact = new Contact({
     name: body.name,
     number: body.number,
-  };
+  });
 
   newContact.save().then((savedContact) => {
     resp.json(savedContact);
