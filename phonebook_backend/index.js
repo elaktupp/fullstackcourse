@@ -116,12 +116,11 @@ app.post("/api/persons", (req, resp) => {
   const newContact = {
     name: body.name,
     number: body.number,
-    id: generateId(),
   };
 
-  contacts = contacts.concat(newContact);
-
-  resp.json(newContact);
+  newContact.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 
 const generateId = () => {
