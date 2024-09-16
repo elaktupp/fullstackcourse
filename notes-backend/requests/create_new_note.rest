@@ -5,3 +5,13 @@ Content-Type: application/json
     "content": "VS code reset client is pretty handy tool",
     "important": true
 }
+
+###
+
+POST https://full-stack-course-simple-web-server.onrender.com/api/notes
+Content-Type: application/json
+
+{
+    "content": "VS code reset client is pretty handy tool",
+    "important": true
+}

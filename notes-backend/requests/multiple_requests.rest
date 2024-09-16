@@ -6,4 +6,8 @@ DELETE http://localhost:3001/api/notes/2
 
 ###
 
-GET http://localhost:3001/api/notes
+GET https://full-stack-course-simple-web-server.onrender.com/api/notes
+
+###
+
+DELETE https://full-stack-course-simple-web-server.onrender.com/api/notes/4
