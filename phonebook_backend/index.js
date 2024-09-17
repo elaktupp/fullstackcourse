@@ -138,26 +138,43 @@ app.put("/api/persons/:id", (req, resp, next) => {
 
 app.post("/api/persons", (req, resp) => {
   const body = req.body;
-
   let errors = checkNewContactForErrors(body.name, body.number);
 
   if (errors.length > 0) {
     return resp.status(400).json({ error: `${errors.join(",")}` });
   }
 
-  Contact.find({})
-    .select({ name: body.name })
-    .then((contacts) => {
-      console.log("FOUND SOMETHING:", contacts);
-    });
+  // console.log("SEARCH FOR:", req.body.name);
 
-  const newContact = new Contact({
-    name: body.name,
-    number: body.number,
-  });
+  Contact.findOne({ name: req.body.name }).then((contact) => {
+    // console.log("FOUND SOMETHING:", contact);
+    let contactExistsId = contact.toJSON().id;
+    if (contactExistsId) {
+      // Contact person exists, try updating number
+      const contact = {
+        name: body.name,
+        number: body.number,
+      };
 
-  newContact.save().then((savedContact) => {
-    resp.json(savedContact);
+      // console.log("UPDATE EXISTING:", contactExistsId, body.name, body.number);
+
+      Contact.findByIdAndUpdate(contactExistsId, contact, { new: true })
+        .then((updatedContact) => {
+          resp.json(updatedContact);
+        })
+        .catch((error) => next(error));
+    } else {
+      const newContact = new Contact({
+        name: body.name,
+        number: body.number,
+      });
+
+      // console.log("CREATE NEW:", contactExistsId, body.name, body.number);
+
+      newContact.save().then((savedContact) => {
+        resp.json(savedContact);
+      });
+    }
   });
 });
 
