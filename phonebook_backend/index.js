@@ -146,21 +146,22 @@ app.post("/api/persons", (req, resp, next) => {
     return resp.status(400).json({ error: `${errors.join(",")}` });
   }
 
-  // console.log("SEARCH FOR:", req.body.name);
+  console.log("SEARCH FOR:", req.body.name);
 
-  Contact.findOne({ name: req.body.name }).then((contact) => {
-    // console.log("RESULT:", contact);
+  Contact.findOne({ name: body.name }).then((contact) => {
+    console.log("RESULT:", contact);
     let contactExistsId = contact?.toJSON().id || null;
     if (contactExistsId !== null) {
       // Contact person exists, try updating number
-      const contact = {
-        name: body.name,
-        number: body.number,
-      };
+      const { name, number } = body;
 
-      // console.log("UPDATE EXISTING:", contactExistsId, body.name, body.number);
+      console.log("UPDATE EXISTING:", contactExistsId, body.name, body.number);
 
-      Contact.findByIdAndUpdate(contactExistsId, contact, { new: true })
+      Contact.findByIdAndUpdate(
+        contactExistsId,
+        { name, number },
+        { new: true, runValidators: true, context: "query" }
+      )
         .then((updatedContact) => {
           resp.json(updatedContact);
         })
@@ -171,7 +172,7 @@ app.post("/api/persons", (req, resp, next) => {
         number: body.number,
       });
 
-      // console.log("CREATE NEW:", contactExistsId, body.name, body.number);
+      console.log("CREATE NEW:", contactExistsId, body.name, body.number);
 
       newContact
         .save()

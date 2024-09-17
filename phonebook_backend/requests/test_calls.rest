@@ -36,8 +36,8 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Arto Hellas",
-    "number": ""
+    "name": "Bob",
+    "number": "0"
 }
 
 ### Create a new contact with EXISTING name, should UPDATE
