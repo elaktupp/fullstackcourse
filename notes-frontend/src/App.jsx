@@ -51,12 +51,21 @@ const App = (props) => {
       important: Math.random() < 0.5,
       // id: String(notes.length + 1), <-- OMITTED, LET SERVER SET THIS!
     };
-    noteService.create(noteObject).then((returnedNote) => {
-      console.log(returnedNote);
-      setNotes(notes.concat(returnedNote));
-      // This is another way: setNotes([...notes, returnedNote]);
-      setNewNote("");
-    });
+    noteService
+      .create(noteObject)
+      .then((returnedNote) => {
+        console.log(returnedNote);
+        setNotes(notes.concat(returnedNote));
+        // This is another way: setNotes([...notes, returnedNote]);
+        setNewNote("");
+      })
+      .catch((error) => {
+        setErrorMessage(`Note not added due to an error: '${error.message}'`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+        setNotes(notes.filter((n) => n.id !== id));
+      });
   };
 
   const notesToShow = showAll
