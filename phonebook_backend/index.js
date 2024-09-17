@@ -29,6 +29,8 @@ const errorHandler = (error, req, resp, next) => {
   console.log(error);
   if (error.name === "CastError") {
     resp.status(400).send({ error: "malformed id:" });
+  } else if (error.name === "ValidationError") {
+    resp.status(400).send({ error: error.message });
   }
   next(error);
 };
@@ -136,7 +138,7 @@ app.put("/api/persons/:id", (req, resp, next) => {
 
 // CREATE NEW CONTACT
 
-app.post("/api/persons", (req, resp) => {
+app.post("/api/persons", (req, resp, next) => {
   const body = req.body;
   let errors = checkNewContactForErrors(body.name, body.number);
 
@@ -171,9 +173,12 @@ app.post("/api/persons", (req, resp) => {
 
       // console.log("CREATE NEW:", contactExistsId, body.name, body.number);
 
-      newContact.save().then((savedContact) => {
-        resp.json(savedContact);
-      });
+      newContact
+        .save()
+        .then((savedContact) => {
+          resp.json(savedContact);
+        })
+        .catch((error) => next(error));
     }
   });
 });

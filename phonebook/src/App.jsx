@@ -62,7 +62,7 @@ const App = () => {
   const handleAddContact = (event) => {
     event.preventDefault();
 
-    persons.find((p) => console.log(p.name === newName, p));
+    //persons.find((p) => console.log(p.name === newName, p));
 
     let personExists = persons.find((p) => p.name === newName);
     if (personExists) {
@@ -103,7 +103,8 @@ const App = () => {
           showMessage(`New contact added ${data.name} ${data.number}.`);
         })
         .catch((error) => {
-          showMessage(`"${error.message}" occured!`, "error", 5000);
+          console.log(error);
+          showMessage(`${error.response.data.error}`, "error", 5000);
         });
     }
   };
