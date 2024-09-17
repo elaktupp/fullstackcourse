@@ -9,8 +9,8 @@ GET https://full-stack-course-simple-web-server.onrender.com/api/notes
 ### Note that id from database is completely different, 24 characters long, e.g. 66e417d8269a6c8bf68a9c1b
 DELETE https://full-stack-course-simple-web-server.onrender.com/api/notes/4
 
-### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response.
+### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response. "Not found"
 GET https://full-stack-course-simple-web-server.onrender.com/api/notes/bad000bad000bad000bad000
 
-### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response.
+### Id string must be 24 characters, otherwise goes to catch-branch due to 503 response. "Malformed id"
 GET https://full-stack-course-simple-web-server.onrender.com/api/notes/thisisbad

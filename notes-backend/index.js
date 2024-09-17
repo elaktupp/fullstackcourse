@@ -22,20 +22,6 @@ const errorHandler = (error, req, resp, next) => {
 };
 
 //
-// HELPER FUNCTIONS
-//
-const generateId = () => {
-  const maxId =
-    notes.length > 0 ? Math.max(...notes.map((n) => Number(n.id))) : 0;
-
-  // ...notes.map((n) => Number(n.id)) produces array of ids, e.g. [1,2,3]
-  // But array cannot be use as a parameter to Math.max.
-  // Array is transformed into individual number by using "..." spread syntax.
-
-  return String(maxId + 1);
-};
-
-//
 // CODE
 //
 require("dotenv").config(); // do this before database models
@@ -60,19 +46,6 @@ app.use(express.static("dist"));
 // DATABASE, MODELS
 //
 const Note = require("./models/note");
-
-//
-// DATA
-//
-let notes = [
-  { id: "1", content: "HTML is easy", important: true },
-  { id: "2", content: "Browser can execute only JavaScript", important: false },
-  {
-    id: "3",
-    content: "GET and POST and the most important mehtods of HTTP protocol",
-    important: true,
-  },
-];
 
 //
 // ROOT
@@ -109,10 +82,29 @@ app.get("/api/notes/:id", (request, response, next) => {
 // API / DELETE
 //
 app.delete("/api/notes/:id", (request, response) => {
-  const id = request.params.id;
-  notes = notes.filter((note) => note.id !== id);
-  // 204 = no content
-  response.status(204).end();
+  Note.findByIdAndDelete(request.params.id)
+    .then((result) => {
+      response.status(204).end(); // 204 = no content
+    })
+    .catch(error >= next(error));
+});
+
+//
+// API / UPDATE
+//
+app.put("/api/notes/:id", (request, response) => {
+  const body = request.body;
+
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then((updatedNote) => {
+      response.json(updatedNote);
+    })
+    .catch(error >= next(error));
 });
 
 //
