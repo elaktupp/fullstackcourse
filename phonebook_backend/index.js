@@ -77,9 +77,16 @@ app.get("/", (req, resp) => {
 // INFO PAGE
 
 app.get("/info", (req, resp) => {
-  let info = `<p>Phonebook has info for ${contacts.length} people</p>`;
-  info += `<p>${new Date()}</p>`;
-  resp.send(info);
+  Contact.find({})
+    .then((contacts) => {
+      let info = `<p>Phonebook has info for ${contacts.length} people</p>`;
+      info += `<p>${new Date()}</p>`;
+      resp.send(info);
+    })
+    .catch((error) => {
+      let info = `<p>Failed to get Phonebook info.</p>`;
+      resp.send(info);
+    });
 });
 
 // ALL CONTACTS
@@ -92,26 +99,39 @@ app.get("/api/persons", (req, resp) => {
 
 // CONTACT BY ID
 
-app.get("/api/persons/:id", (req, resp) => {
-  const id = req.params.id;
-  const contact = contacts.find((c) => c.id === id);
-  if (contact) {
-    // id match found
-    resp.json(contact);
-  } else {
-    // id not found
-    resp.status(404).end();
-  }
+app.get("/api/persons/:id", (req, resp, next) => {
+  Contact.findById(req.params.id)
+    .then((contact) => {
+      resp.json(contact);
+    })
+    .catch((error) => next(error));
 });
 
 // DELETE BY ID
 
-app.delete("/api/persons/:id", (req, resp) => {
+app.delete("/api/persons/:id", (req, resp, next) => {
   Contact.findByIdAndDelete(req.params.id)
     .then((result) => {
       resp.status(204).end(); // 204 no content
     })
-    .catch((error) => net(error));
+    .catch((error) => next(error));
+});
+
+// UPDATE BY ID
+
+app.put("/api/persons/:id", (req, resp, next) => {
+  const body = request.body;
+
+  const contact = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Contact.findByIdAndUpdate(req.params.id, contact, { new: true })
+    .then((updatedContact) => {
+      resp.json(updatedContact);
+    })
+    .catch((error) => next(error));
 });
 
 // CREATE NEW CONTACT
@@ -124,6 +144,12 @@ app.post("/api/persons", (req, resp) => {
   if (errors.length > 0) {
     return resp.status(400).json({ error: `${errors.join(",")}` });
   }
+
+  Contact.find({})
+    .select({ name: body.name })
+    .then((contacts) => {
+      console.log("FOUND SOMETHING:", contacts);
+    });
 
   const newContact = new Contact({
     name: body.name,
@@ -147,10 +173,6 @@ const checkNewContactForErrors = (name, number) => {
 
   if (!number) {
     errors.push("number is missing");
-  }
-
-  if (contacts.find((c) => c.name === name)) {
-    errors.push("name already exists");
   }
 
   return errors;

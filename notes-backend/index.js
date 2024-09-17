@@ -81,7 +81,7 @@ app.get("/api/notes/:id", (request, response, next) => {
 //
 // API / DELETE
 //
-app.delete("/api/notes/:id", (request, response) => {
+app.delete("/api/notes/:id", (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
     .then((result) => {
       response.status(204).end(); // 204 = no content
@@ -92,7 +92,7 @@ app.delete("/api/notes/:id", (request, response) => {
 //
 // API / UPDATE
 //
-app.put("/api/notes/:id", (request, response) => {
+app.put("/api/notes/:id", (request, response, next) => {
   const body = request.body;
 
   const note = {
