@@ -68,7 +68,7 @@ const App = () => {
     if (personExists) {
       if (
         window.confirm(
-          `${newName} is already added to phonebook. Do you want to override existing contact?`
+          `${newName} is already added to phonebook. Do you want to overwrite existing number?`
         )
       ) {
         const newPersonData = {
@@ -85,6 +85,7 @@ const App = () => {
             showMessage(`Number of ${data.name} changed to ${data.number}.`);
           })
           .catch((error) => {
+            console.log("UPDATE ERROR:", error);
             showMessage(
               `${newPersonData.name} is already removed from server.`,
               "error",
@@ -104,6 +105,7 @@ const App = () => {
         })
         .catch((error) => {
           console.log(error);
+          console.log("CREATION ERROR:", error);
           showMessage(`${error.response.data.error}`, "error", 5000);
         });
     }

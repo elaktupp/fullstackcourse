@@ -122,7 +122,7 @@ app.delete("/api/persons/:id", (req, resp, next) => {
 // UPDATE BY ID
 
 app.put("/api/persons/:id", (req, resp, next) => {
-  const body = request.body;
+  const body = req.body;
 
   const contact = {
     name: body.name,
