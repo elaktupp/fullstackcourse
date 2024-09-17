@@ -20,8 +20,13 @@ mongoose
     console.log("error connecting to MongoDB:", error.message);
   });
 
+// Mongoose validation rules for Schema.
+// - "content" has validation rules (minLenght, required are build-in validatiors)
+// - "important" does not have rules
+// Object breaking rules causes database operation
+// to throw an exception.
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content: { type: String, minLength: 5, required: true },
   important: Boolean,
 });
 

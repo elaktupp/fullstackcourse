@@ -17,6 +17,8 @@ const errorHandler = (error, req, resp, next) => {
   console.log(error);
   if (error.name === "CastError") {
     resp.status(400).send({ error: "malformed id:" });
+  } else if (error.name === "ValidationError") {
+    resp.status(400).send({ error: error.message });
   }
   next(error);
 };
@@ -93,14 +95,13 @@ app.delete("/api/notes/:id", (request, response, next) => {
 // API / UPDATE
 //
 app.put("/api/notes/:id", (request, response, next) => {
-  const body = request.body;
+  const { content, important } = request.body;
 
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
-
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedNote) => {
       response.json(updatedNote);
     })
@@ -110,7 +111,7 @@ app.put("/api/notes/:id", (request, response, next) => {
 //
 // API / NEW NOTE
 //
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
   // NOTE: Without the json-parser request.body would be undefined.
   const body = request.body;
 
@@ -123,9 +124,14 @@ app.post("/api/notes", (request, response) => {
     important: Boolean(body.important) || false,
   });
 
-  note.save().then((savedNote) => {
-    response.json(savedNote);
-  });
+  note
+    .save()
+    .then((savedNote) => {
+      response.json(savedNote);
+    })
+    .catch((error) => next(error));
+  // Catches, e.g. a note with invalid content that causes database
+  // to throw an exception.
 });
 
 // Non-existing route, set AFTER ROUTES!
