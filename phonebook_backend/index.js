@@ -23,6 +23,16 @@ let contacts = [
   },
 ];
 
+// MIDDLEWARE
+
+const errorHandler = (error, req, resp, next) => {
+  console.log(error);
+  if (error.name === "CastError") {
+    resp.status(400).send({ error: "malformed id:" });
+  }
+  next(error);
+};
+
 // CODE
 
 // Environment variables
@@ -97,9 +107,11 @@ app.get("/api/persons/:id", (req, resp) => {
 // DELETE BY ID
 
 app.delete("/api/persons/:id", (req, resp) => {
-  const id = req.params.id;
-  contacts = contacts.filter((c) => c.id !== id);
-  resp.status(204).end();
+  Contact.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      resp.status(204).end(); // 204 no content
+    })
+    .catch((error) => net(error));
 });
 
 // CREATE NEW CONTACT
@@ -123,12 +135,8 @@ app.post("/api/persons", (req, resp) => {
   });
 });
 
-const generateId = () => {
-  // Random integer from min (included) to max (excluded)
-  const min = 1;
-  const max = Number.MAX_SAFE_INTEGER;
-  return Math.floor(Math.random() * (max - min) + min);
-};
+// Error handler has to be last loaded middleware and also after routes!
+app.use(errorHandler);
 
 const checkNewContactForErrors = (name, number) => {
   let errors = [];
