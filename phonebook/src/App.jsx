@@ -115,8 +115,9 @@ const App = () => {
       phonebookService
         .deleteContact(persons[index].id)
         .then((data) => {
+          console.log("Delete resp:", data);
+          showMessage(`Removed ${persons[index].name}.`);
           phonebookService.getAllContacts().then((data) => setPersons(data));
-          showMessage(`Removed ${data.name}.`);
         })
         .catch((error) => {
           showMessage(
