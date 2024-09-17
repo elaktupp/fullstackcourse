@@ -10,17 +10,17 @@ const getAll = () => {
   //       return response.data;
   //     });
   // Compact way:
-  // return request.then((response) => response.data);
+  return request.then((response) => response.data);
 
   // TEST CODE with erroneus content to test catch on importance toggle
-  /**/
+  /*
   const nonExisting = {
     id: 10000,
     content: "This note is not saved to server",
     important: true,
   };
   return request.then((response) => response.data.concat(nonExisting));
-  /**/
+  */
 };
 
 const create = (newObject) => {
