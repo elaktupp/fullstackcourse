@@ -86,7 +86,7 @@ app.delete("/api/notes/:id", (request, response) => {
     .then((result) => {
       response.status(204).end(); // 204 = no content
     })
-    .catch(error >= next(error));
+    .catch((error) => next(error));
 });
 
 //
@@ -104,7 +104,7 @@ app.put("/api/notes/:id", (request, response) => {
     .then((updatedNote) => {
       response.json(updatedNote);
     })
-    .catch(error >= next(error));
+    .catch((error) => next(error));
 });
 
 //
