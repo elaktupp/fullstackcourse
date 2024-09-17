@@ -147,9 +147,9 @@ app.post("/api/persons", (req, resp) => {
   // console.log("SEARCH FOR:", req.body.name);
 
   Contact.findOne({ name: req.body.name }).then((contact) => {
-    // console.log("FOUND SOMETHING:", contact);
-    let contactExistsId = contact.toJSON().id;
-    if (contactExistsId) {
+    // console.log("RESULT:", contact);
+    let contactExistsId = contact?.toJSON().id || null;
+    if (contactExistsId !== null) {
       // Contact person exists, try updating number
       const contact = {
         name: body.name,
