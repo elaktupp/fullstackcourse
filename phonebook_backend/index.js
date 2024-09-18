@@ -119,24 +119,23 @@ app.delete("/api/persons/:id", (req, resp, next) => {
     .catch((error) => next(error));
 });
 
-// UPDATE BY ID
+// UPDATE BY ID - update existing contact number
 
 app.put("/api/persons/:id", (req, resp, next) => {
-  const body = req.body;
-
-  const contact = {
-    name: body.name,
-    number: body.number,
-  };
-
-  Contact.findByIdAndUpdate(req.params.id, contact, { new: true })
+  // console.log("PUT UPDATE:", req.params.id, req.body.name, req.body.number);
+  const { name, number } = req.body;
+  Contact.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedContact) => {
       resp.json(updatedContact);
     })
     .catch((error) => next(error));
 });
 
-// CREATE NEW CONTACT
+// CREATE NEW CONTACT - create new contact with valid name and number
 
 app.post("/api/persons", (req, resp, next) => {
   const body = req.body;
@@ -146,42 +145,32 @@ app.post("/api/persons", (req, resp, next) => {
     return resp.status(400).json({ error: `${errors.join(",")}` });
   }
 
-  console.log("SEARCH FOR:", req.body.name);
+  // Check if name already exists and if it does return error.
+  // - Error is returned because it is not POST method's resposibility
+  // to change its behavior from create to update.
+  // - Client should check if name exists and then call create
+  // or update accordingly.
+  Contact.findOne({ name: body.name })
+    .then((contact) => {
+      if (contact !== null) {
+        return resp.status(400).json({ error: "name already exists" });
+      } else {
+        const newContact = new Contact({
+          name: body.name,
+          number: body.number,
+        });
 
-  Contact.findOne({ name: body.name }).then((contact) => {
-    console.log("RESULT:", contact);
-    let contactExistsId = contact?.toJSON().id || null;
-    if (contactExistsId !== null) {
-      // Contact person exists, try updating number
-      const { name, number } = body;
+        // console.log("CREATE NEW:", newContact);
 
-      console.log("UPDATE EXISTING:", contactExistsId, body.name, body.number);
-
-      Contact.findByIdAndUpdate(
-        contactExistsId,
-        { name, number },
-        { new: true, runValidators: true, context: "query" }
-      )
-        .then((updatedContact) => {
-          resp.json(updatedContact);
-        })
-        .catch((error) => next(error));
-    } else {
-      const newContact = new Contact({
-        name: body.name,
-        number: body.number,
-      });
-
-      console.log("CREATE NEW:", contactExistsId, body.name, body.number);
-
-      newContact
-        .save()
-        .then((savedContact) => {
-          resp.json(savedContact);
-        })
-        .catch((error) => next(error));
-    }
-  });
+        newContact
+          .save()
+          .then((savedContact) => {
+            resp.json(savedContact);
+          })
+          .catch((error) => next(error));
+      }
+    })
+    .catch((error) => next(error));
 });
 
 // Error handler has to be last loaded middleware and also after routes!
