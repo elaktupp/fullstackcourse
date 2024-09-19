@@ -34,4 +34,4 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
-module.exports = { app, port: process.env.PORT };
+module.exports = app;
