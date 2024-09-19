@@ -1,0 +1,14 @@
+### GET ALL
+GET http://localhost:3003/api/blogs
+
+### POST NEW ITEM
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "F.U.B.A.R. for dummies",
+    "author": "Derphy",
+    "url": "https://dummy-test.url",
+    "likes": 42
+}
