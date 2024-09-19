@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const config = require("./config");
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -10,11 +11,9 @@ const blogSchema = new mongoose.Schema({
   likes: Number,
 });
 
-require("dotenv").config();
-
 const Blog = mongoose.model("Blog", blogSchema);
 
-const mongoUrl = process.env.MONGODB_URI;
+const mongoUrl = config.MONGODB_URI;
 mongoose.connect(mongoUrl);
 
 app.use(cors());
