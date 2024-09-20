@@ -8,7 +8,18 @@ Content-Type: application/json
 
 {
     "title": "F.U.B.A.R. for dummies",
-    "author": "Derphy",
+    "author": "M. E. Derpy",
+    "url": "https://dummy-test.url",
+    "likes": 24
+}
+
+### POST ANOTHER NEW ITEM
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "F.U.B.A.R.",
+    "author": "M. R. Murphy",
     "url": "https://dummy-test.url",
     "likes": 42
 }
