@@ -3,7 +3,7 @@ const assert = require("node:assert");
 const listHelper = require("../utils/list_helper");
 
 describe("total likes", () => {
-  const listWithOneBlog = [
+  const listOfOneBlog = [
     {
       _id: "5a422aa71b54a676234d17f8",
       title: "Go To Statement Considered Harmful",
@@ -15,11 +15,11 @@ describe("total likes", () => {
   ];
 
   test("when list has only one blog, equals the likes of that", () => {
-    const result = listHelper.totalLikes(listWithOneBlog);
+    const result = listHelper.totalLikes(listOfOneBlog);
     assert.strictEqual(result, 5);
   });
 
-  const listWithBlogs = [
+  const listOfBlogs = [
     {
       _id: "5a422aa71b54a676234d17f8",
       title: "Go To Statement Considered Harmful",
@@ -47,7 +47,7 @@ describe("total likes", () => {
   ];
 
   test("when list has 3 blogs, each with 5 likes, equals the likes of that", () => {
-    const result = listHelper.totalLikes(listWithBlogs);
+    const result = listHelper.totalLikes(listOfBlogs);
     assert.strictEqual(result, 15);
   });
 });
@@ -109,6 +109,142 @@ describe("favorite blog", () => {
     assert.deepStrictEqual(
       result.title,
       listWithBlogs[expectedListIndex].title
+    );
+  });
+});
+
+describe("most blogs", () => {
+  test("when list has several blogs and several have tie in most number of blogs, result is the first one", () => {
+    // Sample array of objects
+    const listOfBlogs = [
+      {
+        _id: "5a422aa71b54a676234d1722",
+        title: "My first blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/first.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1711",
+        title: "Tiny's blog",
+        author: "Tiny Liked-Most",
+        url: "https://dummy/tb/tinyblog.pdf",
+        likes: 120,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1733",
+        title: "My second blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/second.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1744",
+        title: "My third blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/third.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1755",
+        title: "A blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/a.pdf",
+        likes: 2,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1766",
+        title: "Bee blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/b.pdf",
+        likes: 19,
+      },
+      {
+        _id: "5a422aa71b54a676234d1777",
+        title: "Ceed blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/c.pdf",
+        likes: 9,
+        __v: 0,
+      },
+    ];
+
+    const result = listHelper.mostBlogs(listOfBlogs);
+    // result: { author: <name>, blogs: <number of blogs> }
+    assert.strictEqual(result.author === "Big Blogger", true);
+  });
+});
+describe("most likes", () => {
+  test("when list has several blogs and several have tie in most number of likes, result is the first one", () => {
+    // Sample array of objects
+    const listOfBlogs = [
+      {
+        _id: "5a422aa71b54a676234d1722",
+        title: "My first blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/first.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1711",
+        title: "Tiny's blog",
+        author: "Tiny Liked-Most",
+        url: "https://dummy/tb/tinyblog.pdf",
+        likes: 120,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1733",
+        title: "My second blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/second.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1744",
+        title: "My third blog",
+        author: "Big Blogger",
+        url: "https://dummy/bb/third.pdf",
+        likes: 12,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1755",
+        title: "A blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/a.pdf",
+        likes: 2,
+        __v: 0,
+      },
+      {
+        _id: "5a422aa71b54a676234d1766",
+        title: "Bee blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/b.pdf",
+        likes: 19,
+      },
+      {
+        _id: "5a422aa71b54a676234d1777",
+        title: "Ceed blog",
+        author: "Other Blogger",
+        url: "https://dummy/ob/c.pdf",
+        likes: 9,
+        __v: 0,
+      },
+    ];
+
+    const result = listHelper.mostLikes(listOfBlogs);
+    // result: { author: <name>, likes: <total number of likes> }
+    assert.strictEqual(
+      result.author === "Tiny Liked-Most" && result.likes === 120,
+      true
     );
   });
 });
